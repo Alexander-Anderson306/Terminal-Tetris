@@ -15,9 +15,9 @@
 //one for gravity
 //one for user input
 
-void game_loop(Board* board, Piece* piece, int* score);
+void game_loop(Board* board, Piece* piece, Piece* next_piece, int* score);
 void* input_thread(void* args);
-int check_for_clears_and_score(Board* board, int fall_rate_index);
+int check_for_clears_and_score(Board* board, Piece* next_piece, int fall_rate_index);
 int update_fall_rate(int score);
 double get_time();
 #endif

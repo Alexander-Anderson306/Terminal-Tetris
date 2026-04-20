@@ -1,4 +1,5 @@
 #include "game.h"
+#include "piece.h"
 //in terms of how many frames pass before scene update
 int fall_rate[] = {60 * 1.5, 60, 60 * 0.8, 60 * 0.6, 60 * 0.5, 60 * 0.4};
 double frame_rate = 1.0/60.0;
@@ -21,22 +22,23 @@ int main() {
     do {
         init_piece(&piece);   
     } while(piece.type == Z || piece.type == REVERS_Z);
-
+    Piece next_piece;
+    init_piece(&next_piece);
     int score = 0;
     //put the piece on the board and start the game loop
     update_board(&board, &piece, NULL);
 
     //initial frame
-    print_board(&board);
+    print_board(&board, &next_piece);
     printf("Score: %d\n", 0);
     printf("\033[%dA", ROWS + 1);
 
     //user input thread
     pthread_t input_tid;
-    Thread_Args args = (Thread_Args) {&board, &piece, &score};
+    Thread_Args args = (Thread_Args) {&board, &piece, &next_piece, &score};
     pthread_create(&input_tid, NULL, input_thread, &args);
 
-    game_loop(&board, &piece, &score);
+    game_loop(&board, &piece, &next_piece, &score);
 
     //past here the game is over 
 
@@ -57,7 +59,7 @@ int main() {
 /**
  * This function controles the tetris game logic. Delta time is used to set the fall rate.
 **/
-void game_loop(Board* board, Piece* piece, int* score) {
+void game_loop(Board* board, Piece* piece, Piece* next_piece, int* score) {
     double last_time = get_time();
     double now = 0;
     double delta_time = 0;
@@ -97,13 +99,14 @@ void game_loop(Board* board, Piece* piece, int* score) {
                 copy_piece(&temp_piece, piece);
             } else if(result == 1) {
                 //piece landed
-                init_piece(piece);
+                copy_piece(next_piece, piece);
+                init_piece(next_piece);
                 //check for clears
                 char score_updated = 1;
                 int old_score = *score;
                 //handle clears update the score (and handle when pieces fall in place and need to be cleared again)
                 while(score_updated) {
-                    *score += check_for_clears_and_score(board, fall_rate_index);
+                    *score += check_for_clears_and_score(board, next_piece, fall_rate_index);
                     score_updated = *score != old_score;
                     old_score = *score;
                 }
@@ -125,7 +128,7 @@ void game_loop(Board* board, Piece* piece, int* score) {
             pthread_mutex_unlock(&board_mutex);
 
             pthread_mutex_lock(&print_mutex);
-            print_board(&copy);
+            print_board(&copy, next_piece);
             printf("Score: %d\n", *score);
             printf("\033[%dA", ROWS + 1);
             pthread_mutex_unlock(&print_mutex);
@@ -150,6 +153,7 @@ void* input_thread(void* args) {
     Thread_Args* thread_args = (Thread_Args*) args;
     Board* board = thread_args->board;
     Piece* piece = thread_args->piece;
+    Piece* next_piece = thread_args->next_piece;
     int* score = thread_args->score;
     char input;
 
@@ -211,7 +215,7 @@ void* input_thread(void* args) {
                 pthread_mutex_unlock(&board_mutex);
 
                 pthread_mutex_lock(&print_mutex);
-                print_board(&copy);
+                print_board(&copy, next_piece);
                 printf("Score: %d\n", *score);
                 printf("\033[%dA", ROWS + 1);
                 pthread_mutex_unlock(&print_mutex);
@@ -221,7 +225,7 @@ void* input_thread(void* args) {
     return NULL;
 }
 
-int check_for_clears_and_score(Board* board, int fall_rate_index) {
+int check_for_clears_and_score(Board* board, Piece* next_piece, int fall_rate_index) {
     //NOTE: we do rows and cols 1 to length-1 because we dont need to worry about the rim of the board
 
     char rows[ROWS];
@@ -304,7 +308,7 @@ int check_for_clears_and_score(Board* board, int fall_rate_index) {
         }
         last_time = now;
         //flash the pieces that are getting deleted
-        print_board(board);
+        print_board(board, next_piece);
         printf("Score: %d\n", score);
         printf("\033[%dA", ROWS + 1);
         now = get_time();
@@ -315,7 +319,7 @@ int check_for_clears_and_score(Board* board, int fall_rate_index) {
             delta_time = now - last_time;
         }
         last_time = now;
-        print_board(&flashed_board);
+        print_board(&flashed_board, next_piece);
         printf("Score: %d\n", score);
         printf("\033[%dA", ROWS + 1);
         ++num_flashes;
@@ -334,7 +338,7 @@ int check_for_clears_and_score(Board* board, int fall_rate_index) {
     }
 
     //print the cleared board to show the deletion
-    print_board(board);
+    print_board(board, next_piece);
     printf("Score: %d\n", score);
     printf("\033[%dA", ROWS + 1);
 
@@ -418,7 +422,7 @@ int check_for_clears_and_score(Board* board, int fall_rate_index) {
 
     //print the new board
     pthread_mutex_lock(&print_mutex);
-    print_board(board);
+    print_board(board, next_piece);
     printf("Score: %d\n", score);
     printf("\033[%dA", ROWS + 1);
     pthread_mutex_unlock(&print_mutex);

@@ -58,6 +58,7 @@ typedef struct Piece {
 typedef struct Thread_Args {
     Board* board;
     Piece* piece;
+    Piece* next_piece;
     int* score;
 } Thread_Args;
 

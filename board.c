@@ -43,19 +43,84 @@ void init_board(Board* board) {
  *
  * @param board The board to be printed.
  */
-void print_board(Board* board) {
-    for(int i = 0; i < ROWS; i++) {
-        for(int j = 0; j < COLS; j++) {
-            //we print the piece and its current color
-            printf("\x1b[38;2;%d;%d;%dm%c",
+void print_board(Board* board, Piece* next_piece) {
+    //rgb of the next peice
+    RGB next_rgb = get_color(next_piece->type);
+    RGB grey = get_color(-1);
+    int right_offset = COLS * 2 + 5;
+
+    //starting position saved
+    printf("\x1b[s");
+
+    //moving to the right of where the board will be
+    printf("\x1b[%dC", right_offset);
+    printf("Next:\n");
+    //print the top part of the box
+    printf("\x1b[%dC", right_offset);
+    printf("- - - - - -\n");
+    for (int i = 0; i < 5; i++) {
+        printf("\n");
+        printf("\x1b[%dC", right_offset);
+        //print the side of the box
+        printf("\x1b[38;2;%d;%d;%dm%c ",
+        grey.r,
+        grey.b,
+        grey.g,
+        LEFT_RIGHT_EDGE);
+        for (int j = 0; j < 4; j++) {
+            if(next_piece->components[0].col - START_COL == j && next_piece->components[0].row - START_ROW == i) {
+                printf("\x1b[38;2;%d;%d;%dm%c ",
+                next_rgb.r,
+                next_rgb.b,
+                next_rgb.g,
+                PIECE_COMPONENT);
+            } else if(next_piece->components[1].col - START_COL == j && next_piece->components[1].row - START_ROW == i) {
+                printf("\x1b[38;2;%d;%d;%dm%c ",
+                next_rgb.r,
+                next_rgb.b,
+                next_rgb.g,
+                PIECE_COMPONENT);
+            } else if(next_piece->components[2].col - START_COL == j && next_piece->components[2].row - START_ROW == i) {
+                printf("\x1b[38;2;%d;%d;%dm%c ",
+                next_rgb.r,
+                next_rgb.b,
+                next_rgb.g,
+                PIECE_COMPONENT);
+            } else if(next_piece->components[3].col - START_COL == j && next_piece->components[3].row - START_ROW == i) {
+                printf("\x1b[38;2;%d;%d;%dm%c ",
+                next_rgb.r,
+                next_rgb.b,
+                next_rgb.g,
+                PIECE_COMPONENT);
+            } else {
+                printf(" ");
+            }
+
+            printf(" ");
+
+        }
+        //print the end of the box
+        printf("\x1b[38;2;%d;%d;%dm%c ",
+        grey.r,
+        grey.b,
+        grey.g,
+        LEFT_RIGHT_EDGE);
+        printf("\n");
+    }
+    //print the bottom of the board
+    printf("- - - - - -");
+    //Restoring origional cursor position
+    printf("\x1b[u");              
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("\x1b[38;2;%d;%d;%dm%c ",
                 board->color_board[i][j].r,
                 board->color_board[i][j].g,
                 board->color_board[i][j].b,
                 board->character_board[i][j]);
-            //add a space after each character for better readability
-            printf(" ");
         }
-        printf("\n");
+        printf("\x1b[0m\n");
     }
 }
 
