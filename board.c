@@ -57,8 +57,8 @@ void print_board(Board* board, Piece* next_piece) {
     printf("Next:\n");
     //print the top part of the box
     printf("\x1b[%dC", right_offset);
-    printf(" - - - -\n");
-    for (int i = START_ROW - 2; i < START_ROW + 2; i++) {
+    printf("- - - -\n");
+    for (int i = START_ROW; i < START_ROW + 2; i++) {
         printf("\x1b[%dC", right_offset);
         //print the side of the box
         printf("\x1b[38;2;%d;%d;%dm%c",
@@ -108,7 +108,7 @@ void print_board(Board* board, Piece* next_piece) {
     //print the bottom of the board
     
     printf("\x1b[%dC", right_offset);
-    printf(" - - - -");
+    printf("- - - -");
     //Restoring origional cursor position
     printf("\x1b[u");              
 

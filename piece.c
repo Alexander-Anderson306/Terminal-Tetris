@@ -48,31 +48,38 @@ void init_piece(Piece* piece) {
             piece->components[3].col = START_COL + 1;
             break;
         case L:
-            //first component
+            // left block
             piece->components[0].row = START_ROW;
-            piece->components[0].col = START_COL;
-            //second component pivot
-            piece->components[1].row = START_ROW + 1;
+            piece->components[0].col = START_COL - 1;
+
+            // pivot center
+            piece->components[1].row = START_ROW;
             piece->components[1].col = START_COL;
-            //third component
-            piece->components[2].row = START_ROW + 2;
-            piece->components[2].col = START_COL;
-            //fourth component
-            piece->components[3].row = START_ROW + 2;
+
+            // right block
+            piece->components[2].row = START_ROW;
+            piece->components[2].col = START_COL + 1;
+
+            // lower-right foot
+            piece->components[3].row = START_ROW + 1;
             piece->components[3].col = START_COL + 1;
             break;
+
         case REVERS_L:
-            //first component
+            // left block
             piece->components[0].row = START_ROW;
-            piece->components[0].col = START_COL;
-            //second component pivot
-            piece->components[1].row = START_ROW + 1;
+            piece->components[0].col = START_COL - 1;
+
+            // pivot center
+            piece->components[1].row = START_ROW;
             piece->components[1].col = START_COL;
-            //third component
-            piece->components[2].row = START_ROW + 2;
-            piece->components[2].col = START_COL;
-            //fourth component
-            piece->components[3].row = START_ROW + 2;
+
+            // right block
+            piece->components[2].row = START_ROW;
+            piece->components[2].col = START_COL + 1;
+
+            // lower-left foot
+            piece->components[3].row = START_ROW + 1;
             piece->components[3].col = START_COL - 1;
             break;
         case Z:
