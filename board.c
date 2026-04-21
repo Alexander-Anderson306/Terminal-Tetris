@@ -58,7 +58,7 @@ void print_board(Board* board, Piece* next_piece) {
     //print the top part of the box
     printf("\x1b[%dC", right_offset);
     printf("- - - - - -\n");
-    for (int i = 0; i < 5; i++) {
+    for (int i = START_ROW; i < START_ROW + 6; i++) {
         printf("\n");
         printf("\x1b[%dC", right_offset);
         //print the side of the box
@@ -67,26 +67,26 @@ void print_board(Board* board, Piece* next_piece) {
         grey.b,
         grey.g,
         LEFT_RIGHT_EDGE);
-        for (int j = 0; j < 4; j++) {
-            if(next_piece->components[0].col - START_COL == j && next_piece->components[0].row - START_ROW == i) {
+        for (int j = START_COL; j < START_ROW + 4; j++) {
+            if(next_piece->components[0].col == j && next_piece->components[0].row == i) {
                 printf("\x1b[38;2;%d;%d;%dm%c ",
                 next_rgb.r,
                 next_rgb.b,
                 next_rgb.g,
                 PIECE_COMPONENT);
-            } else if(next_piece->components[1].col - START_COL == j && next_piece->components[1].row - START_ROW == i) {
+            } else if(next_piece->components[1].col == j && next_piece->components[1].row == i) {
                 printf("\x1b[38;2;%d;%d;%dm%c ",
                 next_rgb.r,
                 next_rgb.b,
                 next_rgb.g,
                 PIECE_COMPONENT);
-            } else if(next_piece->components[2].col - START_COL == j && next_piece->components[2].row - START_ROW == i) {
+            } else if(next_piece->components[2].col == j && next_piece->components[2].row == i) {
                 printf("\x1b[38;2;%d;%d;%dm%c ",
                 next_rgb.r,
                 next_rgb.b,
                 next_rgb.g,
                 PIECE_COMPONENT);
-            } else if(next_piece->components[3].col - START_COL == j && next_piece->components[3].row - START_ROW == i) {
+            } else if(next_piece->components[3].col == j && next_piece->components[3].row == i) {
                 printf("\x1b[38;2;%d;%d;%dm%c ",
                 next_rgb.r,
                 next_rgb.b,
@@ -96,16 +96,14 @@ void print_board(Board* board, Piece* next_piece) {
                 printf(" ");
             }
 
-            printf(" ");
-
         }
         //print the end of the box
-        printf("\x1b[38;2;%d;%d;%dm%c ",
+        printf("\x1b[38;2;%d;%d;%dm%c",
         grey.r,
         grey.b,
         grey.g,
         LEFT_RIGHT_EDGE);
-        printf("\n");
+        printf("\r\n");
     }
     //print the bottom of the board
     printf("- - - - - -");
