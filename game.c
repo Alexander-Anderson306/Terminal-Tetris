@@ -1,7 +1,11 @@
 #include "game.h"
 #include "piece.h"
 //in terms of how many frames pass before scene update
+#ifdef HARD_MODE
+int fall_rate[] = {60 * 0.8, 60 * 0.6, 60 * 0.5, 60 * 0.4, 60 * 0.3, 60 * 0.2};
+#else
 int fall_rate[] = {60 * 1.5, 60, 60 * 0.8, 60 * 0.6, 60 * 0.5, 60 * 0.4};
+#endif
 double frame_rate = 1.0/60.0;
 _Atomic char game_over = 0;
 //this mutex will be used to lock access to the board
