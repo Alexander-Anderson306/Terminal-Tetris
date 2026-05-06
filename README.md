@@ -11,9 +11,8 @@ Tetris written entirly in C for the terminal.
 ---
 
 ## How to play:
-Clone the repository  
-Compile with: gcc *.c -o game -pthread or gcc -DEASY_MODE *.c -o game -pthread for easy mode.  
-Then run the program!
+Clone the repository
+Run make and play the version you wish to play! Its as easy as that! 
 
 ---
 
@@ -36,14 +35,24 @@ Then run the program!
 ---
 
 ## Levels:
-- 0-999 points: Fall rate of one block per second.
-- 1000-2499: Fall rate of one block per 0.8 seconds.
-- 2500-5999: Fall rate of one block per 0.6 seconds.
+# Standard:
+- 0-999 points: Fall rate of one block per 1.5 seconds.
+- 1000-2499: Fall rate of one block per 1 seconds.
+- 2500-5999: Fall rate of one block per 0.8 seconds.
+- 6000-9999: Fall rate of one block per 0.6 seconds.
+- 10000-19999: Fall rate of one block per 0.5 seconds.
+- 20000 and beyond: Fall rate of one block per 0.4 seconds.
+
+# Hard Mode:
+- 0-999 points: Fall rate of one block per 0.8 seconds.
+- 1000-2499: Fall rate of one block per 0.6 seconds.
+- 2500-5999: Fall rate of one block per 0.5 seconds.
 - 6000-9999: Fall rate of one block per 0.4 seconds.
-- 10000-19999: Fall rate of one block per 0.2 seconds.
-- 20000 and beyond: Fall rate of one block per 0.1 second (good luck).
+- 10000-19999: Fall rate of one block per 0.3 seconds.
+- 20000 and beyond: Fall rate of one block per 0.2 seconds (good luck).
+
 
 ## Don't like the scoring or the gravity?
 Go ahead and change the source code!
-The gravity tick rates are found at the top of game.c.
+The gravity frame rates are found at the top of game.c.
 The level cut offs are found at the bottem of game.c in the update_fall_tick_rate function.
